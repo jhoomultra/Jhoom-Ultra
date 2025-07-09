@@ -6,11 +6,11 @@ from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from YukkiMusic import LOGGER, app, userbot
-from YukkiMusic.core.call import Yukki
-from YukkiMusic.misc import sudo
-from YukkiMusic.plugins import ALL_MODULES
-from YukkiMusic.utils.database import get_banned_users, get_gbanned
+from JhoomMusic import LOGGER, app, userbot
+from JhoomMusic.core.call import Jhoom
+from JhoomMusic.misc import sudo
+from JhoomMusic.plugins import ALL_MODULES
+from JhoomMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
 
@@ -36,27 +36,27 @@ async def init():
         pass
     await app.start()
     for all_module in ALL_MODULES:
-        importlib.import_module("YukkiMusic.plugins" + all_module)
-    LOGGER("YukkiMusic.plugins").info("Successfully Imported Modules...")
+        importlib.import_module("JhoomMusic.plugins" + all_module)
+    LOGGER("JhoomMusic.plugins").info("Successfully Imported Modules...")
     await userbot.start()
-    await Yukki.start()
+    await Jhoom.start()
     try:
-        await Yukki.stream_call("https://telegra.ph/file/29f784eb49d230ab62e9e.mp4")
+        await Jhoom.stream_call("https://telegra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
-        LOGGER("YukkiMusic").error(
+        LOGGER("JhoomMusic").error(
             "Please turn on the videochat of your log group\channel.\n\nStopping Bot..."
         )
         exit()
     except:
         pass
-    await Yukki.decorators()
-    LOGGER("YukkiMusic").info(
-        "Yukki Music Bot Started Successfully, Now goo and play some music!"
+    await Jhoom.decorators()
+    LOGGER("JhoomMusic").info(
+        "Jhoom Music Bot Started Successfully, Now goo and play some music!"
     )
     await idle()
     await app.stop()
     await userbot.stop()
-    LOGGER("YukkiMusic").info("Stopping Yukki Music Bot...")
+    LOGGER("JhoomMusic").info("Stopping Jhoom Music Bot...")
 
 
 if __name__ == "__main__":
