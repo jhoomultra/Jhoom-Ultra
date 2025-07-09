@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🎵 JhoomMusic Bot
+#  JHOOM MUSIC 
 ### *Advanced Telegram Music Bot with Auto-Update System*
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:4A90E2,100:7BB3F0&height=120&section=header&text=JhoomMusic&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35" width="100%"/>
@@ -88,4 +88,4 @@
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 </div>
 
-## 🔧 **Auto-Update System**
+
