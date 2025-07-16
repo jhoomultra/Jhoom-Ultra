@@ -8,14 +8,14 @@ from pyrogram import filters
 load_dotenv()
 
 # Get it from my.telegram.org
-API_ID = int(getenv("API_ID", "0"))
-API_HASH = getenv("API_HASH", "")
+API_ID = int(getenv("API_ID", "6701155507"))
+API_HASH = getenv("API_HASH", "ee0b6a29d4918aa6dabeb181d2c15a36")
 
 ## Get it from @Botfather in Telegram.
-BOT_TOKEN = getenv("BOT_TOKEN", "")
+BOT_TOKEN = getenv("BOT_TOKEN", "8000279573:AAGn2RZWvRzw5VKT2iska-_4kaWYVdfeJpI")
 
 # Database to save your chats and stats... Get MongoDB:-  https://telegra.ph/How-To-get-Mongodb-URI-04-06
-MONGO_DB_URI = getenv("MONGO_DB_URI", "")
+MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://jhoommusic1:Ujala%404804@jhoommusic.mmccnwj.mongodb.net/?retryWrites=true&w=majority&appName=jhoommusic")
 
 # Custom max audio(music) duration for voice chat. set DURATION_LIMIT in variables with your own time(mins), Default to 60 mins.
 DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", "60"))
@@ -24,10 +24,10 @@ DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", "60"))
 SONG_DOWNLOAD_DURATION = int(getenv("SONG_DOWNLOAD_DURATION_LIMIT", "180"))
 
 # You'll need a Private Group ID for this.
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "0"))
+LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002312345678"))
 
 # Your User ID.
-OWNER_ID = list(map(int, getenv("OWNER_ID", "").split()))
+OWNER_ID = list(map(int, getenv("OWNER_ID", "5620922625").split()))
 
 # Get it from http://dashboard.heroku.com/account
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", "")
@@ -62,7 +62,7 @@ AUTO_DOWNLOADS_CLEAR = getenv("AUTO_DOWNLOADS_CLEAR", "True")
 AUTO_SUGGESTION_MODE = getenv("AUTO_SUGGESTION_MODE", "True")
 
 # You'll need a Pyrogram String Session for these vars. Generate String from our session generator bot @JhoomStringBot
-STRING1 = getenv("STRING_SESSION", "")
+STRING1 = getenv("STRING_SESSION", "BQF_OdsAJJCB9ILaOmRp7lERmO95xwM-drzLUFFvjsS9dnK4lqpH1f45yv7ulo53LspWP0Yx5Z5hdS31X77kgA2fxVs6ZqiARG4KYjwN8n8Czr0qSwdQfc-8O85V183sQpJRa6QRjrZG6vqU-NvJID2kjp6tz39WHv8MK7weIF5HmCEaTKblSvNIzC82vwR5mI1ygvinzRlA5QL4e7O4j35cNELs1RiwSRkwWRbyTzQSX0MY-krYi3L6QKYLZA2qfEzTtAyqQQtoMpVvzqwCHbIMw27li0EuacsLiqSYfnIbOuCiK8Rilk7XVtXZ7JVUg779v-MkERi94oqQXzPJH6Co6b_TQgAAAAGPa4SzAA")
 STRING2 = getenv("STRING_SESSION2", "")
 STRING3 = getenv("STRING_SESSION3", "")
 STRING4 = getenv("STRING_SESSION4", "")
@@ -80,8 +80,8 @@ TG_VIDEO_FILESIZE_LIMIT = int(getenv("TG_VIDEO_FILESIZE_LIMIT", "1073741824"))
 SET_CMDS = getenv("SET_CMDS", "False")
 
 # You'll need a Spotify Client.. checkout https://developer.spotify.com/dashboard
-SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID", "")
-SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET", "")
+SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID", "07e0249e87044dd69b20bfa841ff2d24")
+SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET", "d38e214ff06e43a386fc20d4fa02ab88")
 
 # Maximum number of video calls allowed on bot. You can later set it via /set_video_limit on telegram
 VIDEO_STREAM_LIMIT = int(getenv("VIDEO_STREAM_LIMIT", "3"))
