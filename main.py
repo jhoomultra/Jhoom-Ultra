@@ -48,7 +48,7 @@ async def init():
         await Jhoom.stream_call("https://telegra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("JhoomMusic").error(
-            "Please turn on the videochat of your log group\channel.\n\nStopping Bot..."
+            "Please turn on the videochat of your log group\\channel.\n\nStopping Bot..."
         )
         exit()
     except:
