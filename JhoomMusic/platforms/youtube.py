@@ -3,7 +3,7 @@ import os
 import re
 import yt_dlp
 from typing import Union
-from youtubesearchpython import VideosSearch
+from youtube_search import YoutubeSearch  # <-- FIXED: Changed import as per new package name
 from yt_dlp import YoutubeDL
 
 class YouTubeAPI:
