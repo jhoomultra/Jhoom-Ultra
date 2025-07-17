@@ -2,7 +2,7 @@ import asyncio
 import importlib
 import sys
 from pyrogram import idle
-from pytgcalls.exceptions import NoActiveGroupCall
+from tgcaller.exceptions import NoActiveGroupCall
 
 import config
 from JhoomMusic import LOGGER, app, userbot

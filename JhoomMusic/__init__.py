@@ -2,10 +2,10 @@ import time
 import asyncio
 from motor.motor_asyncio import AsyncIOMotorClient
 from pyrogram import Client
-from pytgcalls import PyTgCalls
-from pytgcalls.types import MediaStream
-from pytgcalls.types.input_stream import AudioPiped, AudioVideoPiped
-from pytgcalls.types.input_stream.quality import HighQualityAudio, HighQualityVideo
+from tgcaller import TgCaller
+from tgcaller.types import MediaStream
+from tgcaller.types.input_stream import AudioPiped, AudioVideoPiped
+from tgcaller.types.input_stream.quality import HighQualityAudio, HighQualityVideo
 
 import config
 from JhoomMusic.logging import LOGGER
@@ -32,8 +32,8 @@ userbot = Client(
     session_string=str(config.STRING1),
 ) if config.STRING1 else None
 
-# PyTgCalls - Updated initialization
-pytgcalls = PyTgCalls(userbot if userbot else app)
+# TgCaller - Updated initialization
+tgcaller = TgCaller(userbot if userbot else app)
 
 # YouTube
 from JhoomMusic.platforms.youtube import YouTube

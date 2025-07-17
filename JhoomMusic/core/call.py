@@ -1,34 +1,34 @@
 import asyncio
 from typing import Dict, Union
-from pytgcalls import PyTgCalls
-from pytgcalls.types import Update
-from pytgcalls.types.input_stream import AudioPiped, AudioVideoPiped
-from pytgcalls.types.input_stream.quality import HighQualityAudio, HighQualityVideo, MediumQualityAudio, MediumQualityVideo
-from pytgcalls.exceptions import NoActiveGroupCall, GroupCallNotFound
+from tgcaller import TgCaller
+from tgcaller.types import Update
+from tgcaller.types.input_stream import AudioPiped, AudioVideoPiped
+from tgcaller.types.input_stream.quality import HighQualityAudio, HighQualityVideo, MediumQualityAudio, MediumQualityVideo
+from tgcaller.exceptions import NoActiveGroupCall, GroupCallNotFound
 
 import config
-from JhoomMusic import LOGGER, app, userbot, pytgcalls
+from JhoomMusic import LOGGER, app, userbot, tgcaller
 from JhoomMusic.utils.database import add_active_chat, remove_active_chat
 
 class Call:
     def __init__(self):
-        self.pytgcalls = pytgcalls
+        self.tgcaller = tgcaller
 
     async def pause_stream(self, chat_id: int):
         try:
-            await self.pytgcalls.pause_stream(chat_id)
+            await self.tgcaller.pause_stream(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error pausing stream in {chat_id}: {e}")
 
     async def resume_stream(self, chat_id: int):
         try:
-            await self.pytgcalls.resume_stream(chat_id)
+            await self.tgcaller.resume_stream(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error resuming stream in {chat_id}: {e}")
 
     async def stop_stream(self, chat_id: int):
         try:
-            await self.pytgcalls.leave_group_call(chat_id)
+            await self.tgcaller.leave_group_call(chat_id)
             await remove_active_chat(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error stopping stream in {chat_id}: {e}")
@@ -44,19 +44,19 @@ class Call:
             else:
                 stream = AudioPiped(link, audio_parameters=HighQualityAudio())
             
-            await self.pytgcalls.change_stream(chat_id, stream)
+            await self.tgcaller.change_stream(chat_id, stream)
         except Exception as e:
             LOGGER(__name__).error(f"Error skipping stream in {chat_id}: {e}")
 
     async def mute_stream(self, chat_id: int):
         try:
-            await self.pytgcalls.mute_stream(chat_id)
+            await self.tgcaller.mute_stream(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error muting stream in {chat_id}: {e}")
 
     async def unmute_stream(self, chat_id: int):
         try:
-            await self.pytgcalls.unmute_stream(chat_id)
+            await self.tgcaller.unmute_stream(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error unmuting stream in {chat_id}: {e}")
 
@@ -91,7 +91,7 @@ class Call:
             else:
                 stream = AudioPiped(link, audio_parameters=audio_quality)
             
-            await self.pytgcalls.join_group_call(chat_id, stream)
+            await self.tgcaller.join_group_call(chat_id, stream)
             await add_active_chat(chat_id)
             
         except NoActiveGroupCall:
@@ -111,23 +111,23 @@ class Call:
 
     async def decorators(self):
         # Setup decorators and handlers
-        @self.pytgcalls.on_stream_end()
-        async def on_stream_end(client: PyTgCalls, update: Update):
+        @self.tgcaller.on_stream_end()
+        async def on_stream_end(client: TgCaller, update: Update):
             chat_id = update.chat_id
             await remove_active_chat(chat_id)
 
-        @self.pytgcalls.on_closed_voice_chat()
-        async def on_closed_voice_chat(client: PyTgCalls, update: Update):
+        @self.tgcaller.on_closed_voice_chat()
+        async def on_closed_voice_chat(client: TgCaller, update: Update):
             chat_id = update.chat_id
             await remove_active_chat(chat_id)
 
     async def start(self):
-        await self.pytgcalls.start()
-        LOGGER(__name__).info("PyTgCalls started successfully")
+        await self.tgcaller.start()
+        LOGGER(__name__).info("TgCaller started successfully")
 
     async def stop_stream_force(self, chat_id: int):
         try:
-            await self.pytgcalls.leave_group_call(chat_id)
+            await self.tgcaller.leave_group_call(chat_id)
             await remove_active_chat(chat_id)
         except Exception as e:
             LOGGER(__name__).error(f"Error force stopping stream in {chat_id}: {e}")
