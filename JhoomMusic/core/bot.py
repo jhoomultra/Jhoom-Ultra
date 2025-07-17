@@ -3,6 +3,7 @@ import importlib
 import sys
 from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
+
 import config
 from JhoomMusic import LOGGER, app, userbot
 from JhoomMusic.core.call import Jhoom
@@ -41,14 +42,16 @@ async def init():
     
     LOGGER("JhoomMusic.plugins").info("Successfully Imported Modules...")
     
-    await userbot.start()
+    if userbot:
+        await userbot.start()
+    
     await Jhoom.start()
     
     try:
         await Jhoom.stream_call("https://telegra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("JhoomMusic").error(
-            "Please turn on the videochat of your log group\channel.\n\nStopping Bot..."
+            "Please turn on the videochat of your log group\\channel.\n\nStopping Bot..."
         )
         exit()
     except:
@@ -61,7 +64,8 @@ async def init():
     
     await idle()
     await app.stop()
-    await userbot.stop()
+    if userbot:
+        await userbot.stop()
     LOGGER("JhoomMusic").info("Stopping Jhoom Music Bot...")
 
 if __name__ == "__main__":

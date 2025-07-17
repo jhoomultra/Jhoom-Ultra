@@ -3,8 +3,8 @@ from typing import Dict, Union
 from pytgcalls import PyTgCalls
 from pytgcalls.types import Update
 from pytgcalls.types.input_stream import AudioPiped, AudioVideoPiped
-from pytgcalls.types.input_stream.quality import HighQualityAudio, HighQualityVideo
-from pytgcalls.exceptions import NoActiveGroupCall
+from pytgcalls.types.input_stream.quality import HighQualityAudio, HighQualityVideo, MediumQualityAudio, MediumQualityVideo
+from pytgcalls.exceptions import NoActiveGroupCall, GroupCallNotFound
 
 import config
 from JhoomMusic import LOGGER, app, userbot, pytgcalls
@@ -74,20 +74,30 @@ class Call:
         forceplay: bool = False
     ):
         try:
+            # Choose quality based on parameter
+            if quality == "high":
+                audio_quality = HighQualityAudio()
+                video_quality = HighQualityVideo()
+            else:
+                audio_quality = MediumQualityAudio()
+                video_quality = MediumQualityVideo()
+            
             if streamtype == "video":
                 stream = AudioVideoPiped(
                     link,
-                    audio_parameters=HighQualityAudio(),
-                    video_parameters=HighQualityVideo()
+                    audio_parameters=audio_quality,
+                    video_parameters=video_quality
                 )
             else:
-                stream = AudioPiped(link, audio_parameters=HighQualityAudio())
+                stream = AudioPiped(link, audio_parameters=audio_quality)
             
             await self.pytgcalls.join_group_call(chat_id, stream)
             await add_active_chat(chat_id)
             
         except NoActiveGroupCall:
             raise Exception("No active voice chat found")
+        except GroupCallNotFound:
+            raise Exception("Group call not found")
         except Exception as e:
             LOGGER(__name__).error(f"Error joining call in {chat_id}: {e}")
             raise e
@@ -106,8 +116,20 @@ class Call:
             chat_id = update.chat_id
             await remove_active_chat(chat_id)
 
+        @self.pytgcalls.on_closed_voice_chat()
+        async def on_closed_voice_chat(client: PyTgCalls, update: Update):
+            chat_id = update.chat_id
+            await remove_active_chat(chat_id)
+
     async def start(self):
         await self.pytgcalls.start()
         LOGGER(__name__).info("PyTgCalls started successfully")
+
+    async def stop_stream_force(self, chat_id: int):
+        try:
+            await self.pytgcalls.leave_group_call(chat_id)
+            await remove_active_chat(chat_id)
+        except Exception as e:
+            LOGGER(__name__).error(f"Error force stopping stream in {chat_id}: {e}")
 
 Jhoom = Call()
