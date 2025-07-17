@@ -36,6 +36,7 @@ async def stream(
     quality,
     forceplay: bool = None,
 ):
+    """Stream audio/video using TgCaller"""
     if not result:
         return
     
@@ -116,3 +117,45 @@ async def stream(
             os.remove(img)
         except:
             pass
+
+async def auto_end(chat_id: int):
+    """Auto end stream when finished"""
+    try:
+        await remove_active_chat(chat_id)
+        await remove_active_video_chat(chat_id)
+    except:
+        pass
+
+async def skip_current_song(chat_id: int):
+    """Skip current song and play next"""
+    from JhoomMusic.utils.database.queue import get_queue, pop_an_item
+    
+    try:
+        next_track = await get_queue(chat_id)
+        if next_track:
+            await pop_an_item(chat_id)
+            await stream(
+                None,  # language
+                None,  # mystic message
+                next_track.get('user_id'),
+                next_track,
+                chat_id,
+                next_track.get('user_name', 'Unknown'),
+                chat_id,
+                next_track.get('streamtype', 'audio'),
+                next_track.get('quality', 'high')
+            )
+        else:
+            await Jhoom.stop_stream(chat_id)
+    except Exception as e:
+        await Jhoom.stop_stream(chat_id)
+
+async def skip_item(chat_id: int, path: str):
+    """Skip specific item"""
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+    except:
+        pass
+    
+    await skip_current_song(chat_id)

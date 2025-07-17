@@ -32,7 +32,7 @@ userbot = Client(
     session_string=str(config.STRING1),
 ) if config.STRING1 else None
 
-# TgCaller - Updated initialization
+# TgCaller - Proper initialization
 tgcaller = TgCaller(userbot if userbot else app)
 
 # YouTube

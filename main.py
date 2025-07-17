@@ -1,7 +1,6 @@
 import asyncio
 import importlib
 import sys
-from pyrogram import idle
 from tgcaller.exceptions import NoActiveGroupCall
 import config
 from JhoomMusic import LOGGER, app, userbot
@@ -12,6 +11,7 @@ from JhoomMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
 async def init():
+    """Initialize the bot"""
     if (
         not config.STRING1
         and not config.STRING2
@@ -61,11 +61,7 @@ async def init():
         "Jhoom Music Bot Started Successfully, Now go and play some music!"
     )
     
-    await idle()
-    await app.stop()
-    if userbot:
-        await userbot.stop()
-    LOGGER("JhoomMusic").info("Stopping Jhoom Music Bot...")
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(init())
+    asyncio.run(init())

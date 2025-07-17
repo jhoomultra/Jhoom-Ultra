@@ -2,7 +2,7 @@ import asyncio
 import os
 import re
 import yt_dlp
-from typing import Union
+from typing import Union, List, Dict, Optional
 from youtube_search import YoutubeSearch
 from yt_dlp import YoutubeDL
 
@@ -12,13 +12,10 @@ class YouTubeAPI:
         self.regex = r"(?:youtube\.com|youtu\.be)"
         self.status = "https://www.youtube.com/oembed?url="
         self.listbase = "https://youtube.com/playlist?list="
-        self.reg = re.compile(
-            r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])"
-        )
+        self.reg = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
 
-    async def exists(
-        self, link: str, videoid: Union[bool, str] = None
-    ):
+    async def exists(self, link: str, videoid: Union[bool, str] = None) -> bool:
+        """Check if YouTube URL exists"""
         if videoid:
             link = self.base + link
         if re.search(self.regex, link):
@@ -27,6 +24,7 @@ class YouTubeAPI:
             return False
 
     async def url(self, message_1) -> Union[str, None]:
+        """Extract URL from message"""
         messages = [message_1]
         if message_1.reply_to_message:
             messages.append(message_1.reply_to_message)
@@ -55,7 +53,8 @@ class YouTubeAPI:
             return url
         return None
 
-    async def details(self, link: str, videoid: Union[bool, str] = None):
+    async def details(self, link: str, videoid: Union[bool, str] = None) -> tuple:
+        """Get video details"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -82,7 +81,8 @@ class YouTubeAPI:
             print(f"Error getting details: {e}")
             return "Unknown", "00:00", 0, "", "unknown"
 
-    async def title(self, link: str, videoid: Union[bool, str] = None):
+    async def title(self, link: str, videoid: Union[bool, str] = None) -> str:
+        """Get video title"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -101,7 +101,8 @@ class YouTubeAPI:
         except:
             return "Unknown"
 
-    async def duration(self, link: str, videoid: Union[bool, str] = None):
+    async def duration(self, link: str, videoid: Union[bool, str] = None) -> str:
+        """Get video duration"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -121,7 +122,8 @@ class YouTubeAPI:
         except:
             return "Unknown"
 
-    async def thumbnail(self, link: str, videoid: Union[bool, str] = None):
+    async def thumbnail(self, link: str, videoid: Union[bool, str] = None) -> str:
+        """Get video thumbnail"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -140,7 +142,8 @@ class YouTubeAPI:
         except:
             return ""
 
-    async def video(self, link: str, videoid: Union[bool, str] = None):
+    async def video(self, link: str, videoid: Union[bool, str] = None) -> tuple:
+        """Get video stream URL"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -160,7 +163,8 @@ class YouTubeAPI:
         except Exception as e:
             return 0, str(e)
 
-    async def track(self, link: str, videoid: Union[bool, str] = None):
+    async def track(self, link: str, videoid: Union[bool, str] = None) -> tuple:
+        """Get audio track info and URL"""
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -198,7 +202,8 @@ class YouTubeAPI:
             print(f"Error getting track: {e}")
             return None, None
 
-    async def search(self, query, filter=False, videoid: Union[bool, str] = None):
+    async def search(self, query: str, filter: bool = False, videoid: Union[bool, str] = None) -> List[Dict]:
+        """Search YouTube videos"""
         if videoid:
             query = self.base + query
         
@@ -224,7 +229,8 @@ class YouTubeAPI:
             print(f"Search error: {e}")
             return []
 
-    def _duration_to_seconds(self, duration_str):
+    def _duration_to_seconds(self, duration_str: str) -> int:
+        """Convert duration string to seconds"""
         try:
             if ':' in duration_str:
                 parts = duration_str.split(':')
@@ -242,7 +248,8 @@ class YouTubeAPI:
         mystic,
         videoid: Union[bool, str] = None,
         video: Union[bool, str] = None,
-    ):
+    ) -> str:
+        """Download audio/video"""
         if videoid:
             link = self.base + link
         
@@ -288,4 +295,5 @@ class YouTubeAPI:
             downloaded_file = await loop.run_in_executor(None, audio_dl)
         return downloaded_file
 
+# Global instance
 YouTube = YouTubeAPI()

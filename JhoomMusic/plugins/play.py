@@ -10,6 +10,7 @@ from JhoomMusic.utils.decorators import AdminRightsCheck
 from JhoomMusic.utils.inline.play import stream_markup, telegram_markup
 from JhoomMusic.utils.stream import stream
 from JhoomMusic.platforms.youtube import YouTube
+from JhoomMusic.plugins.tgcaller_handlers import jhoom_plugins
 from config import BANNED_USERS
 
 @app.on_message(
@@ -18,7 +19,7 @@ from config import BANNED_USERS
     & ~BANNED_USERS
 )
 @AdminRightsCheck
-async def play_commnd(client, message: Message, _, chat_id):
+async def play_command(client, message: Message, _, chat_id):
     if len(message.command) < 2:
         return await message.reply_text("Please provide a song name or URL")
     
@@ -44,7 +45,7 @@ async def play_commnd(client, message: Message, _, chat_id):
     mystic = await message.reply_text("🔍 Searching...")
     
     try:
-        # Check if it's a URL
+        # Check if it's a YouTube URL
         if "youtube.com" in query or "youtu.be" in query:
             url = query
             if not await YouTube.exists(url, videoid=True):
@@ -142,9 +143,60 @@ async def skip_command(client, message: Message, _, chat_id):
     if not len(message.command) == 1:
         return await message.reply_text("Invalid command usage")
     
-    # For now, just stop the stream
-    # You can implement queue management later
-    await Jhoom.stop_stream(chat_id)
-    await message.reply_text(
-        f"⏭ Skipped by {message.from_user.mention}"
-    )
+    # Get next track from queue
+    from JhoomMusic.utils.database.queue import get_queue, pop_an_item
+    next_track = await get_queue(chat_id)
+    
+    if next_track:
+        await pop_an_item(chat_id)
+        await stream(
+            _,
+            message,
+            next_track.get('user_id'),
+            next_track,
+            chat_id,
+            next_track.get('user_name', 'Unknown'),
+            chat_id,
+            next_track.get('streamtype', 'audio'),
+            next_track.get('quality', 'high')
+        )
+        await message.reply_text(
+            f"⏭ Skipped by {message.from_user.mention}"
+        )
+    else:
+        await Jhoom.stop_stream(chat_id)
+        await message.reply_text(
+            f"⏭ Skipped and stopped (no more tracks) by {message.from_user.mention}"
+        )
+
+@app.on_message(filters.command(["youtube", "yt"]) & filters.group & ~BANNED_USERS)
+@AdminRightsCheck
+async def youtube_stream_command(client, message: Message, _, chat_id):
+    """Stream YouTube using TgCaller plugin"""
+    if len(message.command) < 2:
+        return await message.reply_text("Please provide a YouTube URL")
+    
+    url = message.text.split(None, 1)[1]
+    mystic = await message.reply_text("🎵 Starting YouTube stream...")
+    
+    try:
+        await jhoom_plugins.stream_youtube(chat_id, url, quality="high")
+        await mystic.edit_text(f"🎵 YouTube stream started!\nURL: {url}")
+    except Exception as e:
+        await mystic.edit_text(f"❌ YouTube stream failed: {str(e)}")
+
+@app.on_message(filters.command(["bridge"]) & filters.group & ~BANNED_USERS)
+@AdminRightsCheck
+async def bridge_command(client, message: Message, _, chat_id):
+    """Bridge two calls using TgCaller plugin"""
+    if len(message.command) < 2:
+        return await message.reply_text("Please provide target chat ID")
+    
+    try:
+        target_chat_id = int(message.command[1])
+        await jhoom_plugins.bridge_calls(chat_id, target_chat_id)
+        await message.reply_text(f"🌉 Calls bridged: {chat_id} ↔ {target_chat_id}")
+    except ValueError:
+        await message.reply_text("❌ Invalid chat ID")
+    except Exception as e:
+        await message.reply_text(f"❌ Bridge failed: {str(e)}")
